@@ -105,6 +105,13 @@ def add_book():
     print(f'\n{title} by {author} added to the database.')
     time.sleep(1.5)
 
+
+def list_books():
+    for book in session.query(Book).order_by(Book.title):
+        print(f'{book.id}: {book.title} by {book.author}')
+    input('\nPress enter to return to the main menu.')
+
+
 def app():
     app_running = True
     while app_running:
