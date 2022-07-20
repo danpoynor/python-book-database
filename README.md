@@ -10,8 +10,7 @@ Exercise creating an SQLite database including model creation and CRUD using [SQ
 
 ## Potential TODOs
 
-- [ ] Dive into [SQLAlchemy tutorials](https://docs.sqlalchemy.org/en/14/)
-- [ ] Try creating one menu function
+- [ ] Dive into [SQLAlchemy tutorials](https://docs.sqlalchemy.org/en/14/) and integrate more features
 - [ ] Add [docstrings](https://teamtreehouse.com/library/docstrings) to each function
 - [ ] Add [type hinting](https://teamtreehouse.com/library/python-type-hinting)
 - [ ] Try creating pagination for the books so you only see 5 books at a time when viewing them
