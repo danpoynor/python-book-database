@@ -1,4 +1,5 @@
 from calendar import c
+from distutils.command.clean import clean
 from turtle import title
 from models import (Base, session, Book, engine)
 import datetime
@@ -14,8 +15,7 @@ def menu():
             \r2. List all books
             \r3. Search for a book
             \r4. Book Analysis
-            \r5. Exit
-            ''')
+            \r5. Exit''')
         choice = input("What would you like to do? ")
         if choice in ['1', '2', '3', '4', '5']:
             return choice
@@ -23,8 +23,7 @@ def menu():
             input('''
                 \rPlease choose one of the options above.
                 \rA number between 1 and 5.
-                \rPress enter to try again.
-                ''')
+                \rPress enter to try again.''')
 
 
 def clean_date(date_str):
@@ -41,8 +40,7 @@ def clean_date(date_str):
               \rThe date format should include a valid month, day, and year from the past.
               \rEx: January 13, 2003
               \rPress enter to try again.
-              \r**********************
-              ''')
+              \r**********************''')
         return  # Same as return None
     else:
         return datetime.date(year, month, day)
@@ -57,11 +55,33 @@ def clean_price(price_str):
               \rThe price format should be a number without a currency symbol.
               \rEx: 12.99
               \rPress enter to try again.
-              \r***********************
-              ''')
+              \r***********************''')
         return
     else:
         return int(price_float * 100)
+
+
+def clean_id(id_str, options):
+    try:
+        book_id = int(id_str)
+    except ValueError:
+        input('''
+              \n***** ID ERROR *****
+              \rThe id should be a number.
+              \rEx: 1
+              \rPress enter to try again.
+              \r********************''')
+        return
+    else:
+        if book_id in options:
+            return book_id
+        else:
+            input(f'''
+              \n***** ID ERROR *****
+              \rOptions are: {options}
+              \rPress enter to try again.
+              \r********************''')
+            return
 
 
 def add_csv():
@@ -112,6 +132,27 @@ def list_books():
     input('\nPress enter to return to the main menu.')
 
 
+def search_books():
+    id_options = []
+    for book in session.query(Book):
+        id_options.append(book.id)
+    id_error = True
+    while id_error:
+        id_choice = input(f'''
+                \nId options: {id_options}
+                \rPlease choose a book by ID.
+                \rBook id: ''')
+        id_choice_cleaned = clean_id(id_choice, id_options)
+        if type(id_choice_cleaned) == int:
+            id_error = False
+    the_book = session.query(Book).filter_by(id=id_choice_cleaned).first()
+    print(f'''
+          \n{the_book.title} by {the_book.author}
+          \rPublished: {the_book.publish_date}
+          \rPrice: ${the_book.price/100}''')
+    input('\nPress enter to return to the main menu.')
+
+
 def app():
     app_running = True
     while app_running:
@@ -134,5 +175,5 @@ if __name__ == '__main__':
     add_csv()
     app()
 
-    for book in session.query(Book).all():
-        print(book)
+    # for book in session.query(Book).all():
+    #     print(book)
